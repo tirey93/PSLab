@@ -19,28 +19,41 @@ namespace PSLab.Commands
             table.AddColumn("Time");
             table.AddColumn("Value");
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
             {
                 table.AddRow(new string[2]
                 {
-                    DateTime.Now.ToString("HH:mm:ss"),
-                    $"[green]{_optionsMonitor.CurrentValue.Field1}[/]"
+                    "",
+                    $"abc"
                 });
             }
 
+            var r = new Random();
             int x = 0;
             await AnsiConsole.Live(new Panel(Align.Center(table)))
                .StartAsync(async ctx =>
                {
-                   while (true)
-                   {
-                       table.UpdateCell(x % 10, 0, DateTime.Now.ToString("HH:mm:ss"));
-                       table.UpdateCell(x % 10, 1, $"[green]{_optionsMonitor.CurrentValue.Field1}[/]");
-
-                       ctx.Refresh();
-                       await Task.Delay(1000);
-                       x++;
-                   }
+                   await Task.WhenAll(
+                       Task.Run(async () =>
+                       {
+                           while (true)
+                           {
+                               table.UpdateCell(0, 0, "1");
+                               table.UpdateCell(0, 1, $"[green]{_optionsMonitor.CurrentValue.Field1 * r.Next(100)}[/]");
+                               ctx.Refresh();
+                               await Task.Delay(123);
+                           }
+                       }),
+                       Task.Run(async () =>
+                       {
+                           while (true)
+                           {
+                               table.UpdateCell(1, 0, "2");
+                               table.UpdateCell(1, 1, $"[green]{_optionsMonitor.CurrentValue.Field2 * r.Next(100)}[/]");
+                               ctx.Refresh();
+                               await Task.Delay(265);
+                           }
+                       }));
                });
         }
     }
