@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using PSLab.Settings;
 using Spectre.Console;
-using System;
 
 namespace PSLab.Commands
 {
@@ -30,13 +29,9 @@ namespace PSLab.Commands
 
         public async Task Execute()
         {
-            var r = new Random();
-            int x = 0;
             await AnsiConsole.Live(new Panel(Align.Center(_table)))
                .StartAsync(async ctx =>
                {
-                   int index = 1;
-                  
                    await Task.WhenAll(
                        CreateThread(ctx, 1),
                        CreateThread(ctx, 2),
@@ -56,20 +51,12 @@ namespace PSLab.Commands
         {
             return Task.Run(async () =>
             {
-                ManualResetEvent mre = new ManualResetEvent(false);
-                mre.Set();
-
                 int remainder = 'Z' - 'A' + 1;
                 int i = 0;
                 while (true)
                 {
-                    if (!_optionsMonitor.CurrentValue.Threads[index])
+                    if (_optionsMonitor.CurrentValue.Threads[index])
                     {
-                        mre.Reset();
-                    }
-                    else
-                    {
-                        mre.Set();
                         _table.UpdateCell(index, 0, $"#{index}");
 
                         char c = (char)('A' + i % remainder);
