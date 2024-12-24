@@ -15,8 +15,9 @@ internal class Program
 
         var serviceProvider = new ServiceCollection()
             .Configure<MainSettings>(configuration.GetSection(nameof(MainSettings)))
+            .Configure<Lab1Cw2Settings>(configuration.GetSection(nameof(Lab1Cw2Settings)))
             .AddSingleton<Lab1Cw1>()
-            .AddSingleton<Lab1Command>()
+            .AddSingleton<Lab1Cw2>()
             .BuildServiceProvider();
 
         var options = serviceProvider.GetService<IOptions<MainSettings>>();
@@ -26,6 +27,7 @@ internal class Program
             Command command = options.Value.Mode switch
             {
                 Mode.Lab1Cw1 => serviceProvider.GetService<Lab1Cw1>(),
+                Mode.Lab1Cw2 => serviceProvider.GetService<Lab1Cw2>(),
                 _ => throw new NotImplementedException(),
             };
 
