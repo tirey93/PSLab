@@ -4,7 +4,7 @@ using Spectre.Console;
 
 namespace PSLab.Commands
 {
-    public class Lab1Command
+    public class Lab1Command : Command
     {
         private readonly IOptionsMonitor<MainSettings> _optionsMonitor;
 

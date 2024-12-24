@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using PSLab.Commands;
 using PSLab.Settings;
 
@@ -14,11 +15,27 @@ internal class Program
 
         var serviceProvider = new ServiceCollection()
             .Configure<MainSettings>(configuration.GetSection(nameof(MainSettings)))
+            .AddSingleton<Lab1Cw1>()
             .AddSingleton<Lab1Command>()
             .BuildServiceProvider();
 
-        var lab1Command = serviceProvider.GetRequiredService<Lab1Command>();
+        var options = serviceProvider.GetService<IOptions<MainSettings>>();
 
-        await lab1Command.Execute();
+        try
+        {
+            Command command = options.Value.Mode switch
+            {
+                Mode.Lab1Cw1 => serviceProvider.GetService<Lab1Cw1>(),
+                _ => throw new NotImplementedException(),
+            };
+
+            await command.Execute();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            Console.ReadKey();
+        }
     }
 }
