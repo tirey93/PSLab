@@ -18,6 +18,7 @@ internal class Program
             .Configure<Lab1Cw2Settings>(configuration.GetSection(nameof(Lab1Cw2Settings)))
             .AddSingleton<Lab1Cw1>()
             .AddSingleton<Lab1Cw2>()
+            .AddSingleton<Lab1Cw4>()
             .BuildServiceProvider();
 
         var options = serviceProvider.GetService<IOptions<MainSettings>>();
@@ -28,6 +29,7 @@ internal class Program
             {
                 Mode.Lab1Cw1 => serviceProvider.GetService<Lab1Cw1>(),
                 Mode.Lab1Cw2 => serviceProvider.GetService<Lab1Cw2>(),
+                Mode.Lab1Cw4 => serviceProvider.GetService<Lab1Cw4>(),
                 _ => throw new NotImplementedException(),
             };
 
