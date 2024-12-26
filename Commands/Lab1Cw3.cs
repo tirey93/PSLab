@@ -7,13 +7,15 @@ using Spectre.Console;
 
 namespace PSLab.Commands
 {
-    public class Lab1Cw2 : Command
+    public class Lab1Cw3 : Command
     {
         private readonly IOptionsMonitor<Lab1Cw2Settings> _optionsMonitor;
         private readonly Table _table;
         private readonly List<Thread> _threads;
 
-        public Lab1Cw2(IOptionsMonitor<Lab1Cw2Settings> optionsMonitor)
+        private readonly object _syncRoot = new object();
+
+        public Lab1Cw3(IOptionsMonitor<Lab1Cw2Settings> optionsMonitor)
         {
             _optionsMonitor = optionsMonitor;
 
@@ -64,11 +66,14 @@ namespace PSLab.Commands
             {
                 if (_optionsMonitor.CurrentValue.Threads[index])
                 {
-                    _table.UpdateCell(index, 0, $"#{index}");
+                    lock (_syncRoot)
+                    {
+                        _table.UpdateCell(index, 0, $"#{index}");
 
-                    char c = (char)('A' + i % remainder);
-                    _table.UpdateCell(index, 1, $"[green]{c}{index}[/]");
-                    i++;
+                        char c = (char)('A' + i % remainder);
+                        _table.UpdateCell(index, 1, $"[green]{c}{index}[/]");
+                        i++;
+                    }
                 }
                 Thread.Sleep(1000);
 
